@@ -1,4 +1,4 @@
-module github.com/trinodb/trino-go-client
+module github.com/pandio-com/trino-go-client
 
 go 1.14
 

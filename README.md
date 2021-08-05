@@ -2,8 +2,8 @@
 
 A [Trino](https://trino.io) client for the [Go](https://golang.org) programming language.
 
-[![Build Status](https://github.com/trinodb/trino-go-client/workflows/ci/badge.svg)](https://github.com/trinodb/trino-go-client/actions?query=workflow%3Aci+event%3Apush+branch%3Amaster)
-[![GoDoc](https://godoc.org/github.com/trinodb/trino-go-client?status.svg)](https://godoc.org/github.com/trinodb/trino-go-client)
+[![Build Status](https://github.com/pandio-com/trino-go-client/workflows/ci/badge.svg)](https://github.com/pandio-com/trino-go-client/actions?query=workflow%3Aci+event%3Apush+branch%3Amaster)
+[![GoDoc](https://godoc.org/github.com/pandio-com/trino-go-client?status.svg)](https://godoc.org/github.com/pandio-com/trino-go-client)
 
 ## Features
 
@@ -32,7 +32,7 @@ You need a working environment with Go installed and $GOPATH set.
 Download and install Trino database/sql driver:
 
 ```bash
-go get github.com/trinodb/trino-go-client/trino
+go get github.com/pandio-com/trino-go-client/trino
 ```
 
 Make sure you have Git installed and in your $PATH.
@@ -49,7 +49,7 @@ Example:
 
 ```go
 import "database/sql"
-import _ "github.com/trinodb/trino-go-client/trino"
+import _ "github.com/pandio-com/trino-go-client/trino"
 
 dsn := "http://user@localhost:8080?catalog=default&schema=test"
 db, err := sql.Open("trino", dsn)
@@ -67,7 +67,7 @@ HTTP Basic authentication **is only supported on encrypted connections over HTTP
 
 #### Kerberos authentication
 
-This driver supports Kerberos authentication by setting up the Kerberos fields in the [Config](https://godoc.org/github.com/trinodb/trino-go-client/trino#Config) struct.
+This driver supports Kerberos authentication by setting up the Kerberos fields in the [Config](https://godoc.org/github.com/pandio-com/trino-go-client/trino#Config) struct.
 
 Please refer to the [Coordinator Kerberos Authentication](https://trino.io/docs/current/security/server.html) for server-side configuration.
 
@@ -94,7 +94,7 @@ The Data Source Name is a URL with a mandatory username, and optional query stri
 http[s]://user[:pass]@host[:port][?parameters]
 ```
 
-The easiest way to build your DSN is by using the [Config.FormatDSN](https://godoc.org/github.com/trinodb/trino-go-client/trino#Config.FormatDSN) helper function.
+The easiest way to build your DSN is by using the [Config.FormatDSN](https://godoc.org/github.com/pandio-com/trino-go-client/trino#Config.FormatDSN) helper function.
 
 The driver supports both HTTP and HTTPS. If you use HTTPS it's recommended that you also provide a custom `http.Client` that can validate (or skip) the security checks of the server certificate, and/or to configure TLS client authentication.
 
