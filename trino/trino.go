@@ -121,6 +121,9 @@ const (
 	kerberosRealmConfig      = "KerberosRealm"
 	kerberosConfigPathConfig = "KerberosConfigPath"
 	SSLCertPathConfig        = "SSLCertPath"
+	ProxyEnabled             = "ProxyEnabled"
+	JWTUser                  = "JWTUser"
+	JWTToken                 = "JWTToken"
 )
 
 var (
@@ -160,6 +163,8 @@ type Config struct {
 	KerberosConfigPath string            // The krb5 config path (optional)
 	SSLCertPath        string            // The SSL cert path for TLS verification (optional)
 	ProxyEnabled       bool              // ProxyEnabled (optional, default is false)
+	JWTUser            string            // For JWT type Authentication
+	JWTToken           string            // For JWT type Authentication
 }
 
 // FormatDSN returns a DSN string from the configuration.
@@ -294,10 +299,22 @@ func newConn(dsn string) (*Conn, error) {
 		}
 	}
 
+	proxyEnabled, _ := strconv.ParseBool(query.Get(ProxyEnabled))
+
+	headers := make(http.Header)
+	if proxyEnabled {
+		headers.Add(trinoForwardProtoHeader, "https")
+	}
+
+	if query.Get(JWTUser) != "" && query.Get(JWTToken) != "" {
+		headers.Add("Authorization", "Bearer "+query.Get(JWTToken))
+		headers.Add(trinoUserHeader, query.Get(JWTUser))
+	}
+
 	c := &Conn{
 		baseURL:         serverURL.Scheme + "://" + serverURL.Host,
 		httpClient:      *httpClient,
-		httpHeaders:     make(http.Header),
+		httpHeaders:     headers,
 		kerberosClient:  kerberosClient,
 		kerberosEnabled: kerberosEnabled,
 	}
@@ -859,6 +876,7 @@ func (qr *driverRows) fetch(allowEOF bool) error {
 	}
 	hs := make(http.Header)
 	hs.Add(trinoUserHeader, qr.stmt.user)
+	qr.nextURI = strings.ReplaceAll(qr.nextURI, "https://", "http://")
 	req, err := qr.stmt.conn.newRequest("GET", qr.nextURI, nil, hs)
 	if err != nil {
 		return err
