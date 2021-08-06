@@ -31,12 +31,14 @@ func TestConfig(t *testing.T) {
 	c := &Config{
 		ServerURI:         "http://foobar@localhost:8080",
 		SessionProperties: map[string]string{"query_priority": "1"},
+		ProxyEnabled:      true,
+		JWTUser:           "user",
 	}
 	dsn, err := c.FormatDSN()
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := "http://foobar@localhost:8080?session_properties=query_priority%3D1&source=trino-go-client"
+	want := "http://foobar@localhost:8080?forwarded_proto=https&session_properties=query_priority%3D1&source=trino-go-client"
 	if dsn != want {
 		t.Fatal("unexpected dsn:", dsn)
 	}
